@@ -7,14 +7,20 @@ Created on Fri Oct 04 14:53:22 2013
 
 import os
 import cv2
+import shutil
 
 rgb_src_root = 'F:\\Liyalong\\datasets\\ACT42_partial\\RGB'
 depth_src_root = 'F:\\Liyalong\\datasets\\ACT42_partial\\Depth'
 
-rgb_des_root = 'D:\\Liyalong\\datasets\\rgb'
-depth_des_root = 'D:\\Liyalong\\datasets\\depth'
+rgb_des_root = 'H:\\act42\\rgb'
+depth_des_root = 'H:\\act42\\depth'
+skel_des_root = 'H:\\act42\\skeleton'
 
 person_ids = os.listdir(depth_src_root)
+
+print 'Dataset ACT42 partial'
+print 'To process person_id, a to z, view_id, 1 to 4'
+print 'start...'
 
 for person_id in person_ids:
     view_ids = os.listdir(os.path.join(depth_src_root, person_id))
@@ -52,17 +58,30 @@ for person_id in person_ids:
                     # create corresponding depth folder
                     depth_des_curr = rgb_des_curr.replace('rgb', 'depth')
                     os.mkdir(depth_des_curr)
+                    
+                    # create skeleton folder
+                    skel_des_curr = rgb_des_curr.replace('rgb', 'skeleton')
+                    os.mkdir(skel_des_curr)
                 else:
                     
                     # create a new action type folder and sub folder named '1'
                     os.mkdir(rgb_des_curr)
                     depth_des_curr = rgb_des_curr.replace('rgb', 'depth')
                     os.mkdir(depth_des_curr)
+                    skel_des_curr = rgb_des_curr.replace('rgb', 'skeleton')
+                    os.mkdir(skel_des_curr)
                     
                     rgb_des_curr = os.path.join(rgb_des_curr, '1')
                     depth_des_curr = os.path.join(depth_des_curr, '1')
+                    skel_des_curr = os.path.join(skel_des_curr, '1')
                     os.mkdir(rgb_des_curr)
                     os.mkdir(depth_des_curr)
+                    os.mkdir(skel_des_curr)
+                    
+                # save annotation file
+                annot_name = os.path.join(skel_des_curr, 'annotation.txt')
+                with open(annot_name, 'w') as f_annot:
+                    f_annot.write('act42, 640, 480, 640, 480, 0, 0,\n')
 
                 # get name list of depth images
                 depth_img_names = os.listdir(depth_src_curr)
@@ -78,14 +97,18 @@ for person_id in person_ids:
                         retval, rgb_img = cap.read()
                     
                         if retval:
-                            depth_img = cv2.imread(
-                                os.path.join(depth_src_curr,
-                                             depth_img_names[img_count]),
-                                                   cv2.CV_LOAD_IMAGE_GRAYSCALE)
+                            #depth_img = cv2.imread(
+                            #    os.path.join(depth_src_curr,
+                            #                 depth_img_names[img_count]),
+                            #                       cv2.CV_LOAD_IMAGE_GRAYSCALE)
+                        
+                            depth_img_name = os.path.join(depth_src_curr,
+                                                depth_img_names[img_count])
+                                                
                             img_count += 1
                             
-                            rgb_img = cv2.resize(rgb_img, (80, 60))
-                            depth_img = cv2.resize(depth_img, (80, 60))
+                            #rgb_img = cv2.resize(rgb_img, (80, 60))
+                            #depth_img = cv2.resize(depth_img, (80, 60))
                             
                             rgb_des_img_name = os.path.join(rgb_des_curr,
                                             str(img_count) + '.png')
@@ -93,7 +116,9 @@ for person_id in person_ids:
                                             str(img_count) + '.png')
                                             
                             cv2.imwrite(rgb_des_img_name, rgb_img)
-                            cv2.imwrite(depth_des_img_name, depth_img)
+                            #cv2.imwrite(depth_des_img_name, depth_img)
+                            shutil.copy(depth_img_name, depth_des_img_name)
+                            
                         else:
                             break
                         
