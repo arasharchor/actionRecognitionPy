@@ -8,13 +8,19 @@ Created on Thu Oct 03 19:16:28 2013
 # cad60 dataset helper, reorganize the rgbd images
 import os
 import cv2
+import shutil
 
 root_dir = 'E:\\Liyalong\\rgbd_datas'
 
 data_id = ('1', '2', '3', '4')
 
-rgb_des_root = 'D:\\Liyalong\\datasets\\rgb'
-depth_des_root = 'D:\\Liyalong\\datasets\\depth'
+rgb_des_root = 'H:\\cad60\\rgb'
+depth_des_root = 'H:\\cad60\\depth'
+skel_des_root = 'H:\\cad60\\skeleton'
+
+print 'Dataset cad60'
+print 'To process data_id, 1, 2, 3, 4'
+print 'start...'
 
 for i in data_id:
     work_dir = os.path.join(root_dir, 'data' + i, 'data' + i)
@@ -52,19 +58,41 @@ for i in data_id:
                                   str(exist_folders_count + 1)))
             rgb_des_curr = os.path.join(rgb_des_curr,
                                 str(exist_folders_count + 1))
-                    
+                                
             # create corresponding depth folder
             depth_des_curr = rgb_des_curr.replace('rgb', 'depth')
             os.mkdir(depth_des_curr)
+            
+            # create skeleton folder
+            skel_des_curr = rgb_des_curr.replace('rgb', 'skeleton')
+            os.mkdir(skel_des_curr)
         else:
                     
             # create a new action type folder and sub folder named '1'
             os.mkdir(rgb_des_curr)
             depth_des_curr = rgb_des_curr.replace('rgb', 'depth')
             os.mkdir(depth_des_curr)
+            skel_des_curr = rgb_des_curr.replace('rgb', 'skeleton')
+            os.mkdir(skel_des_curr)
                     
             rgb_des_curr = os.path.join(rgb_des_curr, '1')
             depth_des_curr = os.path.join(depth_des_curr, '1')
+            skel_des_curr = os.path.join(skel_des_curr, '1')
+            os.mkdir(rgb_des_curr)
+            os.mkdir(depth_des_curr)
+            os.mkdir(skel_des_curr)
+            
+        
+        # save skeleton file
+        annot_name = os.path.join(skel_des_curr, 'annoation.txt')
+        with open(annot_name, 'w') as f_annot:
+            f_annot.write('cad60, 320, 240, 320, 240, 1, 1,\n')
+            
+        
+        skel_name = os.path.join(work_dir, activity_id + '_g.txt')
+        skel_des_name = os.path.join(skel_des_curr, 'skeleton.txt')
+        
+        shutil.copy(skel_name, skel_des_name)
         
         # RGB images and Depth Images are in the same file
         rgbd_images_count = len(os.listdir(rgbd_src_curr)) / 2
@@ -74,27 +102,29 @@ for i in data_id:
             'RGB_' + str(i) + '.png')
             depth_img_name = rgb_img_name.replace('RGB', 'Depth')
             
-            rgb_img = cv2.imread(rgb_img_name, cv2.CV_LOAD_IMAGE_COLOR)
-            depth_img = cv2.imread(depth_img_name, cv2.CV_LOAD_IMAGE_GRAYSCALE)
+#            rgb_img = cv2.imread(rgb_img_name, cv2.CV_LOAD_IMAGE_COLOR)
+#            depth_img = cv2.imread(depth_img_name, cv2.CV_LOAD_IMAGE_GRAYSCALE)
+#            
+#            try:
+#                rgb_img = cv2.resize(rgb_img, (80, 60))
+#                depth_img = cv2.resize(depth_img, (80, 60))
+#            except:
+#                print activity_labels
+#                print activity_label
+#                print activity_id
+#                print rgb_img_name
+#
+#                exit(1)                
             
-            try:
-                rgb_img = cv2.resize(rgb_img, (80, 60))
-                depth_img = cv2.resize(depth_img, (80, 60))
-            except:
-                print activity_labels
-                print activity_label
-                print activity_id
-                print rgb_img_name
-
-                exit(1)                
-                
             rgb_img_res_name = os.path.join(rgb_des_curr, str(i) + '.png')
             depth_img_res_name = os.path.join(depth_des_curr, str(i) + '.png')
+
+#            cv2.imwrite(rgb_img_res_name, rgb_img)
+#            cv2.imwrite(depth_img_res_name, depth_img)
+            shutil.copy(rgb_img_name, rgb_img_res_name)
+            shutil.copy(depth_img_name, depth_img_res_name)            
             
-            cv2.imwrite(rgb_img_res_name, rgb_img)
-            cv2.imwrite(depth_img_res_name, depth_img)
-            
-    print 'finish data i...'
+    print 'finished data', data_id, '...'
 
 print 'OK...'
             

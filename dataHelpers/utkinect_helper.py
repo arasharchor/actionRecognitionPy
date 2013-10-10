@@ -15,12 +15,18 @@ import numpy as np
 root_dir = 'D:\\Liyalong\\UTKinect'
 rgb_root_dir = 'D:\\Liyalong\\UTKinect\\RGB\\RGB'
 depth_root_dir = 'D:\\Liyalong\\UTKinect\\depth\\depth'
+skel_root_dir = 'D:\\Liyalong\\UTKinect\\joints\\joints'
 
-rgb_des_root = 'D:\\Liyalong\\datasets\\rgb'
-depth_des_root = 'D:\\Liyalong\\datasets\\depth'
+rgb_des_root = 'H:\\utkinect\\rgb'
+depth_des_root = 'H:\\utkinect\\depth'
+skel_des_root = 'H:\\utkinect\\skeleton'
 
 action_label_path = os.path.join(root_dir, 'actionLabel.txt')
 action_labels = {}
+
+print 'Dataset UTKinect'
+print 'To process ...'
+print 'start...'
 
 # read action label file
 with open(action_label_path, 'r') as f:
@@ -55,6 +61,11 @@ with open(action_label_path, 'r') as f:
 for folder, action_annots in action_labels.iteritems():
     rgb_src_curr = os.path.join(rgb_root_dir, folder)
     depth_src_curr = os.path.join(depth_root_dir, folder)
+    skel_src_curr = os.path.join(skel_root_dir, 'joints_' + folder + '_g.txt')
+    
+    print folder
+#    if folder != 's01_e02':
+ #       continue
     
     for action_annot in action_annots:
         action_type = action_annot[0]
@@ -76,15 +87,73 @@ for folder, action_annots in action_labels.iteritems():
             # create corresponding depth folder
             depth_des_curr = rgb_des_curr.replace('rgb', 'depth')
             os.mkdir(depth_des_curr)
+            
+            skel_des_curr = rgb_des_curr.replace('rgb', 'skeleton')
+            os.mkdir(skel_des_curr)
         else:
                     
             # create a new action type folder and sub folder named '1'
             os.mkdir(rgb_des_curr)
             depth_des_curr = rgb_des_curr.replace('rgb', 'depth')
             os.mkdir(depth_des_curr)
+            skel_des_curr = rgb_des_curr.replace('rgb', 'skeleton')
+            os.mkdir(skel_des_curr)
                     
             rgb_des_curr = os.path.join(rgb_des_curr, '1')
             depth_des_curr = os.path.join(depth_des_curr, '1')
+            skel_des_curr = os.path.join(skel_des_curr, '1')
+            os.mkdir(rgb_des_curr)
+            os.mkdir(depth_des_curr)
+            os.mkdir(skel_des_curr)
+            
+        # save annotation and skeleton
+        annot_name = os.path.join(skel_des_curr, 'annoation.txt')
+        with open(annot_name, 'w') as f_annot:
+            f_annot.write('utkinect, 640, 480, 320, 240, 1, 0,\n')
+            
+
+        result_skel_count = 0        
+
+        f = open(skel_src_curr, 'r')        
+        
+        # save skeleton
+        skel_des_name = os.path.join(skel_des_curr, 'skeleton.txt')
+        with open(skel_des_name, 'w') as f_des:
+            while True:
+                line_3d = f.readline()
+                line_2d = f.readline()
+                curr_frame_id = int(line_3d[0:line_3d.find(',')])
+                #print curr_frame_id
+                
+                if curr_frame_id < int(start_frame):
+                    continue
+                elif (curr_frame_id >= int(start_frame)) and (curr_frame_id < int(end_frame)):
+                    result_skel_count += 1
+                    
+                    skel_res_line_3d = str(result_skel_count) + \
+                                    line_3d[line_3d.find(','):]
+                    skel_res_line_2d = str(result_skel_count) + \
+                                    line_2d[line_3d.find(','):]
+                                    
+                    f_des.write(skel_res_line_3d + skel_res_line_2d)
+                    continue
+                elif curr_frame_id >= int(end_frame):
+                    result_skel_count += 1
+                    
+                    skel_res_line_3d = str(result_skel_count) + \
+                                    line_3d[line_3d.find(','):]
+                    skel_res_line_2d = str(result_skel_count) + \
+                                    line_2d[line_3d.find(','):]
+                                    
+                    f_des.write(skel_res_line_3d + skel_res_line_2d)
+                    f.close()
+                    break
+                else:
+                    print curr_frame_id, start_frame, end_frame
+                    print 'parsing error...'
+                    exit(1)
+        
+        f.close()
             
         result_img_count = 0
         
@@ -116,8 +185,8 @@ for folder, action_annots in action_labels.iteritems():
                 depth_img = cv2.cv.GetMat(depth_img)
                 depth_img = np.asarray(depth_img)
             
-                rgb_img = cv2.resize(rgb_img, (80, 60))
-                depth_img = cv2.resize(depth_img, (80, 60))
+              #  rgb_img = cv2.resize(rgb_img, (80, 60))
+              #  depth_img = cv2.resize(depth_img, (80, 60))
             except:
                 print depth_img_name
                 #print depth_src_curr
@@ -135,6 +204,6 @@ for folder, action_annots in action_labels.iteritems():
             cv2.imwrite(rgb_img_res_name, rgb_img)
             cv2.imwrite(depth_img_res_name, depth_img)
     
-    print 'processing...'
+    print 'finished', folder, '...'
 
 print 'OK...'

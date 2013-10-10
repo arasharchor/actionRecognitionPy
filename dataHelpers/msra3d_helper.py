@@ -11,11 +11,16 @@ import msra3d_depth_reader as depth_reader
 import os
 import cv2
 import numpy as np
+import shutil
 
 def main():
     src_root_dir = 'F:\\Liyalong\\datasets\\MSR3D'
-    rgb_des_root = 'D:\\Liyalong\\datasets\\rgb'	
-    depth_des_root = 'D:\\Liyalong\\datasets\\depth'	
+    
+#    rgb_des_root = 'D:\\Liyalong\\datasets\\rgb'	
+ #   depth_des_root = 'D:\\Liyalong\\datasets\\depth'	
+    rgb_des_root = 'H:\\msra3d\\rgb'
+    depth_des_root = 'H:\\msra3d\\depth'
+    skel_des_root = 'H:\\msra3d\\skeleton'
 
     activities_types = ['drink', 'eat', 'read book', 'call cellphone',
             'write on a paper', 'use laptop', 'use vacuum cleaner', 'cheer up',
@@ -68,18 +73,38 @@ def main():
             # create corresponding depth folder
             depth_des_curr = rgb_des_curr.replace('rgb', 'depth')
             os.mkdir(depth_des_curr)
+            
+            # create corresponding skeleton folder
+            skel_des_curr = rgb_des_curr.replace('rgb', 'skeleton')
+            os.mkdir(skel_des_curr)
         else:
                     
             # create a new action type folder and sub folder named '1'
             os.mkdir(rgb_des_curr)
             depth_des_curr = rgb_des_curr.replace('rgb', 'depth')
             os.mkdir(depth_des_curr)
+            skel_des_curr = rgb_des_curr.replace('rgb', 'skeleton')
+            os.mkdir(skel_des_curr)
                     
             rgb_des_curr = os.path.join(rgb_des_curr, '1')
             depth_des_curr = os.path.join(depth_des_curr, '1')
+            skel_des_curr = os.path.join(skel_des_curr, '1')
             os.mkdir(rgb_des_curr)
             os.mkdir(depth_des_curr)
+            os.mkdir(skel_des_curr)
+            
+        # save annotation file
+        annot_name = os.path.join(skel_des_curr, 'annotation.txt')
+        with open(annot_name, 'w') as f_annot:
+            f_annot.write('msra3d, 640, 480, 320, 240, 1, 1,\n')
+            
+        # save skeleton
+        skel_file = os.path.join(src_root_dir, activity_file_name +
+                                        '_skeleton_g.txt')
+        skel_des_file = os.path.join(skel_des_curr, 'skeleton.txt')
+        shutil.copy(skel_file, skel_des_file)
 
+        # save rgbd images
         rgb_video_path = os.path.join(src_root_dir, activity_file_name +
         								'_rgb.avi')
         depth_file_path = os.path.join(src_root_dir, activity_file_name +
@@ -115,8 +140,8 @@ def main():
                         cv2.normalize(depth_img_tmp, depth_img_tmp, 0, 255, cv2.cv.CV_MINMAX)
                         depth_img = depth_img_tmp.astype('uint8')
 
-                        rgb_img = cv2.resize(rgb_img, (80, 60))
-                        depth_img = cv2.resize(depth_img, (80, 60))
+                        #rgb_img = cv2.resize(rgb_img, (80, 60))
+                        #depth_img = cv2.resize(depth_img, (80, 60))
 
                         rgb_des_img_name = os.path.join(rgb_des_curr,
         									str(i) + '.png')  
@@ -125,8 +150,6 @@ def main():
 
                         cv2.imwrite(rgb_des_img_name, rgb_img)
                         cv2.imwrite(depth_des_img_name, depth_img)
-                        
-                        print rgb_des_img_name
                     else:
                         break
        	rgb_video.release()
@@ -134,6 +157,10 @@ def main():
        	print 'finished', activity_file_name, '...'
 
 if __name__ == '__main__':
+
+    print 'Dataset Msra3D-daily-Action'
+    print 'process 16 types of activities'
+    print 'start...'    
     
     main()
     print 'OK...'
