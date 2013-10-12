@@ -32,8 +32,10 @@ def read_depth_map_skl_bin_file_next_frame(f, num_cols, num_rows, depth_img):
             row_data = f.read(INT_CHUNK_SIZE * num_cols)
             skl_data = f.read(num_cols)
             
+            
             fmt = '@' + str(num_cols) + 'i'
             depth_img[i, :] = struct.unpack(fmt, row_data)
+            
     
 def main():
     depth_file_name = 'F:\\Liyalong\\datasets\\MSR3D\\a01_s01_e01_depth.bin'

@@ -14,9 +14,9 @@ root_dir = 'E:\\Liyalong\\rgbd_datas'
 
 data_id = ('1', '2', '3', '4')
 
-rgb_des_root = 'H:\\cad60\\rgb'
-depth_des_root = 'H:\\cad60\\depth'
-skel_des_root = 'H:\\cad60\\skeleton'
+rgb_des_root = 'F:\\cad60\\rgb'
+depth_des_root = 'F:\\cad60\\depth'
+skel_des_root = 'F:\\cad60\\skeleton'
 
 print 'Dataset cad60'
 print 'To process data_id, 1, 2, 3, 4'

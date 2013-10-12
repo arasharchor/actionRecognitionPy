@@ -58,8 +58,8 @@ for subject_id in subject_ids:
         activity_type)
 
         # set destination folder to save
-        rgb_des_root = 'H:\\cad120\\rgb'
-        depth_des_root = 'H:\\cad120\\depth'     
+        rgb_des_root = 'F:\\cad120\\rgb'
+        depth_des_root = 'F:\\cad120\\depth'     
         
         # read activity one by one and save its subactivity to destination file
         for subactivity_id, subactivity_annots in subactivity_labels.iteritems():
