@@ -27,6 +27,8 @@ def create_des_folder(rgb_des_curr):
         os.mkdir(rgb_des_curr)
         rgb_des_curr = os.path.join(rgb_des_curr, '1')
         os.mkdir(rgb_des_curr)
+
+    return rgb_des_curr
         
 def video2image(video_cap, rgb_des_curr):
     ''' video to image list

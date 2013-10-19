@@ -11,12 +11,15 @@ import os
 import cv2
 
 def weizmann_video2image():
-    rgb_des_root_dir = 'H:\\new_datasets_2d\\weizmann'
-    root_dir = 'E:\new_datasets\weizmann'
+    rgb_des_root_dir = 'H:\\Datasets\\Action2D\\weizmann'
+    root_dir = 'E:\\new_datasets\\weizmann'
     
     action_types = os.listdir(root_dir)
     
     for action_type in action_types:
+        if action_type != 'wave':
+            continue
+            
         action_folder = os.path.join(root_dir, action_type)        
             
         samples_names = os.listdir(action_folder)
@@ -33,7 +36,7 @@ def weizmann_video2image():
                 
                 # create destination folder
                 rgb_des_curr = os.path.join(rgb_des_root_dir, action_type)
-                my_ulity.create_des_folder(rgb_des_curr)
+                rgb_des_curr = my_ulity.create_des_folder(rgb_des_curr)
             
                 my_ulity.video2image(video_cap, rgb_des_curr)
         

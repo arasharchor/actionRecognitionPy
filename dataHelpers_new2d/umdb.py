@@ -5,14 +5,14 @@ Created on Mon Oct 14 23:38:26 2013
 @author: yalong.li
 """
 
-# ucf101
+# ucf50
 import my_ulity
 import os
 import cv2
 
-def ucf101_video2image():
-    rgb_des_root_dir = 'H:\\Datasets\\Action2D\\ucf101'
-    root_dir = 'F:\\new_datasets\\ucf101\\UCF101\\UCF-101'
+def ucf50_video2image():
+    rgb_des_root_dir = 'H:\\Datasets\\Action2D\\umdb'
+    root_dir = 'D:\\new_datasets\\hmdb'
     
     action_types = os.listdir(root_dir)
     
@@ -41,7 +41,7 @@ def ucf101_video2image():
                 
 
 def main():
-    ucf101_video2image()
+    ucf50_video2image()
     print 'OK...'
     
 if __name__ == '__main__':

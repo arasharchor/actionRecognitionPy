@@ -11,7 +11,7 @@ import os
 import cv2
 
 def ucfsport_video2image():
-    rgb_des_root_dir = 'H:\\new_datasets_2d\\ucfsport'
+    rgb_des_root_dir = 'H:\\Datasets\\Action2D\\ucfsport'
     root_dir = 'E:\\new_datasets\\ucf_sports_actions\\ucf_sports_actions\\ucf action'
     
     action_types = os.listdir(root_dir)
@@ -39,7 +39,7 @@ def ucfsport_video2image():
             
                 # create destination folder
                 rgb_des_curr = os.path.join(rgb_des_root_dir, action_type)
-                my_ulity.create_des_folder(rgb_des_curr)
+                rgb_des_curr = my_ulity.create_des_folder(rgb_des_curr)
             
                 my_ulity.video2image(video_cap, rgb_des_curr)
         

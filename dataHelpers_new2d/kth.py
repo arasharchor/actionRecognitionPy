@@ -14,7 +14,7 @@ import os
 import cv2
 
 def kth_video2image():
-    gray_des_root_dir = 'H:\\new_datasets_2d\\kth'    
+    gray_des_root_dir = 'H:\\Datasets\\Action2D\\kth'    
     
     root_dir = 'F:\\new_datasets\\KTH'
     action_types = ('boxing', 'handclapping', 'handwaving',
@@ -35,7 +35,7 @@ def kth_video2image():
             
             # create destination folder
             gray_des_curr = os.path.join(gray_des_root_dir, action_type)
-            my_ulity.create_des_folder(gray_des_curr)
+            gray_des_curr = my_ulity.create_des_folder(gray_des_curr)
             
             my_ulity.video2image(video_cap, gray_des_curr)
         

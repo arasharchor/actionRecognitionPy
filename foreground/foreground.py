@@ -32,7 +32,7 @@ def deal_one_action(rgb_dir_curr):
 #    cv2.namedWindow('rgb_window', cv2.WINDOW_AUTOSIZE)
     cv2.namedWindow('depth_window', cv2.WINDOW_AUTOSIZE)
     cv2.namedWindow('gray_window', cv2.WINDOW_AUTOSIZE)
-    cv2.namedWindow('gray_diff_window', cv2.WINDOW_AUTOSIZE)
+#    cv2.namedWindow('gray_diff_window', cv2.WINDOW_AUTOSIZE)
 #    cv2.namedWindow('depth_diff_window', cv2.WINDOW_AUTOSIZE) 
 #    cv2.namedWindow('mask_window', cv2.WINDOW_AUTOSIZE)
 
